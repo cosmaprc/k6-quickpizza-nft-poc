@@ -4,7 +4,8 @@
   "description": "A k6 quickpizza api NFT demo",
   "main": "test.js",
   "scripts": {
-    "test": "k6 run multiple-spike-scenarios.js -r ENVIRONMENT=prod"
+    "test": "k6 run multiple-spike-scenarios.js -r ENVIRONMENT=prod",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,12 @@
     "eslint": "^9.25.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
     "prettier": "3.5.3"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }

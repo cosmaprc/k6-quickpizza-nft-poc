@@ -1,5 +1,5 @@
 export function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 // export default function fixedSeparation(separation=1, fn) {
 //     return function(...args) {
@@ -42,4 +42,3 @@ export function getRndInteger(min, max) {
 //       return result;
 //     }
 //   }
-  
