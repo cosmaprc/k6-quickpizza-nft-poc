@@ -1,0 +1,24 @@
+{
+  "name": "k6-quickpizza-nft-demo",
+  "version": "1.0.0",
+  "description": "A k6 quickpizza api NFT demo",
+  "main": "test.js",
+  "scripts": {
+    "test": "k6 run test.js -r ENVIRONMENT=prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github.com/test.git"
+  },
+  "keywords": [
+    "k6",
+    "quickpizza",
+    "NFT"
+  ],
+  "author": "cosmaprc@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/github.com/test/issues"
+  },
+  "homepage": "https://github.com/github.com/test#readme"
+}
