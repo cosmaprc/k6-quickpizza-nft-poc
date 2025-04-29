@@ -35,9 +35,9 @@ export function updateRating(URL, ratingId, stars, params) {
   const payload = { stars: stars };
   const res = http.put(URL, JSON.stringify(payload), params);
   const isSuccessful = check(res, {
-    "Updated rating": () => res.status === 200,
-    "Updated rating has expected number of stars": () =>
-      res.json("stars") === stars,
+    "Updated rating": (r) => r.status === 200,
+    "Updated rating has expected number of stars": (r) =>
+      r.json("stars") === stars,
   });
   if (!isSuccessful) {
     console.log(`Unable to update the rating ${URL} ${res.status} ${res.body}`);
