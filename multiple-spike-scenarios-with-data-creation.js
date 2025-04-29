@@ -21,7 +21,8 @@ import {
 
 /*global open*/
 const csvData = new SharedArray("Data creation", function () {
-  return papaparse.parse(open("./data.csv"), { header: true }).data;
+  return papaparse.parse(open("./data_creation/data.csv"), { header: true })
+    .data;
 });
 
 export const options = {
