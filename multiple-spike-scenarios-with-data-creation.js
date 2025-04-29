@@ -51,7 +51,7 @@ export function loginUserScenario() {
   });
 }
 
-export function crudRatingScenario() {
+export function crudPizzaRatingScenario() {
   const authToken = csvData[Math.floor(Math.random() * csvData.length)][""];
   const requestConfig = () => ({
     headers: {
