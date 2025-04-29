@@ -4,7 +4,7 @@
   "description": "A k6 quickpizza api NFT demo",
   "main": "test.js",
   "scripts": {
-    "test": "k6 run test.js -r ENVIRONMENT=prod"
+    "test": "k6 run multiple-spike-scenarios.js -r ENVIRONMENT=prod"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,11 @@
   },
   "homepage": "https://github.com/github.com/test#readme",
   "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@eslint/markdown": "^6.4.0",
+    "eslint": "^9.25.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.0.0",
     "prettier": "3.5.3"
   }
 }
