@@ -72,5 +72,6 @@ export function crudPizzaRatingScenario(authToken) {
     fetchRatings(URL, requestConfig());
     updateRating(URL, ratingId, 5, requestConfig());
     deleteRating(URL, requestConfig());
+    console.log("Rating operations completed");
   });
 }
