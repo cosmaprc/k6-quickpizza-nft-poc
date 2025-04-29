@@ -52,7 +52,7 @@ export function loginUserScenario() {
 }
 
 export function crudPizzaRatingScenario() {
-  const authToken = csvData[Math.floor(Math.random() * csvData.length) + 1][""];
+  const authToken = csvData[Math.floor(Math.random() * csvData.length)][""];
   const requestConfig = () => ({
     headers: {
       Authorization: `Bearer ${authToken}`,
