@@ -46,7 +46,6 @@ export default function () {
   const URL = `${BASE_URL}/api/ratings`;
 
   group("Ratings operations", () => {
-    console.log("test");
     let ratingId = createRating(URL, pizzaId, requestConfig());
     fetchRatings(URL, requestConfig());
     updateRating(URL, ratingId, 5, requestConfig());
