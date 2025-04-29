@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/github.com/test/issues"
   },
-  "homepage": "https://github.com/github.com/test#readme"
+  "homepage": "https://github.com/github.com/test#readme",
+  "devDependencies": {
+    "prettier": "3.5.3"
+  }
 }
