@@ -1,7 +1,7 @@
 export const spikeWorkload = {
   executor: "ramping-vus",
   stages: [
-    { duration: "30s", target: 5 }, // fast ramp-up to a high point
+    { duration: "30s", target: 10 }, // fast ramp-up to a high point
     // No plateau
     { duration: "15s", target: 0 }, // quick ramp-down to 0 users
   ],
@@ -24,7 +24,7 @@ export const createUserScenarioSpikeWorkload = {
   exec: "createUserScenario",
   executor: "ramping-vus",
   stages: [
-    { duration: "30s", target: 5 }, // fast ramp-up to a high point
+    { duration: "30s", target: 10 }, // fast ramp-up to a high point
     // No plateau
     { duration: "15s", target: 0 }, // quick ramp-down to 0 users
   ],
@@ -41,7 +41,7 @@ export const loginUserScenarioSpikeWorkload = {
   exec: "loginUserScenario",
   executor: "ramping-vus",
   stages: [
-    { duration: "30s", target: 5 }, // fast ramp-up to a high point
+    { duration: "30s", target: 10 }, // fast ramp-up to a high point
     // No plateau
     { duration: "15s", target: 0 }, // quick ramp-down to 0 users
   ],
@@ -58,7 +58,7 @@ export const crudPizzaRatingScenarioSpikeWorkload = {
   exec: "crudPizzaRatingScenario",
   executor: "ramping-vus",
   stages: [
-    { duration: "30s", target: 5 }, // fast ramp-up to a high point
+    { duration: "30s", target: 10 }, // fast ramp-up to a high point
     // No plateau
     { duration: "15s", target: 0 }, // quick ramp-down to 0 users
   ],
