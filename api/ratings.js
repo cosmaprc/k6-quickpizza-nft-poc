@@ -8,7 +8,10 @@ export function createRating(URL, pizzaId, params) {
     stars: getRndInteger(1, 5),
     pizza_id: pizzaId,
   };
-  const res = http.post(URL, JSON.stringify(payload), params);
+  const res = http.post(URL, JSON.stringify(payload), {
+    ...params,
+    ...{ tags: { name: "/api/ratings" } },
+  });
   const isSuccessful = check(res, {
     "Created rating": (r) => r.status === 201,
   });
@@ -20,7 +23,10 @@ export function createRating(URL, pizzaId, params) {
 }
 
 export function fetchRatings(URL, params) {
-  const res = http.get(URL, params);
+  const res = http.get(URL, {
+    ...params,
+    ...{ tags: { name: "/api/ratings" } },
+  });
   const isSuccessful = check(res, {
     "Fetched ratings": (r) => r.status === 200,
     "Fetched ratings is a list": (r) => r.json().ratings.length > 0,
@@ -33,7 +39,10 @@ export function fetchRatings(URL, params) {
 export function updateRating(URL, ratingId, stars, params) {
   URL = `${URL}/${ratingId}`;
   const payload = { stars: stars };
-  const res = http.put(URL, JSON.stringify(payload), params);
+  const res = http.put(URL, JSON.stringify(payload), {
+    ...params,
+    ...{ tags: { name: "/api/ratings/{id}" } },
+  });
   const isSuccessful = check(res, {
     "Updated rating": (r) => r.status === 200,
     "Updated rating has expected number of stars": (r) =>
@@ -45,7 +54,10 @@ export function updateRating(URL, ratingId, stars, params) {
 }
 
 export function deleteRating(URL, params) {
-  const res = http.del(URL, null, params);
+  const res = http.del(URL, null, {
+    ...params,
+    ...{ tags: { name: "/api/ratings/{id}" } },
+  });
   const isSuccessful = check(res, {
     "Deleted rating": (r) => r.status === 204,
   });

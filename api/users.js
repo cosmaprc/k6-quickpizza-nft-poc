@@ -9,7 +9,7 @@ export function createUser(URL, username, password) {
       password: password,
     }),
     {
-      tags: { name: "Create User" },
+      tags: { name: "/api/users" },
     },
   );
   const isSuccessfulCreate = check(res, {
@@ -29,7 +29,7 @@ export function loginUser(URL, username, password) {
       password: password,
     }),
     {
-      tags: { name: "Login User" },
+      tags: { name: "/api/users/token/login" },
     },
   );
   const isSuccessfulLogin = check(res, {

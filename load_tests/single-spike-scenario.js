@@ -22,17 +22,10 @@ export default function () {
   const USERNAME = `${randomString(12)}@example.com`;
   const PASSWORD = "secret";
 
-  const requestConfigWithTag = (tag) => ({
+  const requestConfig = () => ({
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
-    tags: Object.assign(
-      {},
-      {
-        name: "Pizza Rating Scenario",
-      },
-      tag,
-    ),
   });
 
   let authToken = null; // This will be set after the user is created and logged in
@@ -47,27 +40,15 @@ export default function () {
 
   let pizzaId = null; // This will be set after the pizza is created
   group("Pizza operations", () => {
-    pizzaId = makePizza(
-      `${BASE_URL}/api/pizza`,
-      requestConfigWithTag({ name: "Make Pizza" }),
-    );
+    pizzaId = makePizza(`${BASE_URL}/api/pizza`, requestConfig());
   });
 
   const URL = `${BASE_URL}/api/ratings`;
 
   group("Ratings operations", () => {
-    let ratingId = createRating(
-      URL,
-      pizzaId,
-      requestConfigWithTag({ name: "Create Rating" }),
-    );
-    fetchRatings(URL, requestConfigWithTag({ name: "Fetch Ratings" }));
-    updateRating(
-      URL,
-      ratingId,
-      5,
-      requestConfigWithTag({ name: "Update Rating" }),
-    );
-    deleteRating(URL, requestConfigWithTag({ name: "Delete Rating" }));
+    let ratingId = createRating(URL, pizzaId, requestConfig());
+    fetchRatings(URL, requestConfig());
+    updateRating(URL, ratingId, 5, requestConfig());
+    deleteRating(URL, requestConfig());
   });
 }

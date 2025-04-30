@@ -12,7 +12,10 @@ export function makePizza(URL, params) {
     maxNumberOfToppings: getRndInteger(2, 10),
     minNumberOfToppings: 2,
   };
-  const res = http.post(URL, JSON.stringify(reqBody), params);
+  const res = http.post(URL, JSON.stringify(reqBody), {
+    ...params,
+    ...{ tags: { name: "/api/pizza" } },
+  });
   const isSuccessful = check(res, {
     "Got pizza": (r) => r.status === 200,
     "Pizza is fresh": (r) => r.json().pizza.id > 0,
