@@ -1,21 +1,21 @@
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import { group } from "k6";
 
-import { makePizza } from "./api/pizza.js";
+import { makePizza } from "../api/pizza.js";
 import {
   createRating,
   deleteRating,
   fetchRatings,
   updateRating,
-} from "./api/ratings.js";
-import { createUser, loginUser } from "./api/users.js";
+} from "../api/ratings.js";
+import { createUser, loginUser } from "../api/users.js";
 import {
   BASE_URL,
   CREATE_USER_WORKLOAD,
   CRUD_PIZZA_RATING_WORKLOAD,
   LOGIN_USER_WORKLOAD,
   THRESHOLDS,
-} from "./config/config.js";
+} from "../config/config.js";
 
 export const options = {
   scenarios: {

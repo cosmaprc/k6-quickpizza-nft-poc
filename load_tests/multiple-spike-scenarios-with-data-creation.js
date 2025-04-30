@@ -3,25 +3,25 @@ import papaparse from "https://jslib.k6.io/papaparse/5.1.1/index.js";
 import { group } from "k6";
 import { SharedArray } from "k6/data";
 
-import { makePizza } from "./api/pizza.js";
+import { makePizza } from "../api/pizza.js";
 import {
   createRating,
   deleteRating,
   fetchRatings,
   updateRating,
-} from "./api/ratings.js";
-import { createUser, loginUser } from "./api/users.js";
+} from "../api/ratings.js";
+import { createUser, loginUser } from "../api/users.js";
 import {
   BASE_URL,
   CREATE_USER_WORKLOAD,
   CRUD_PIZZA_RATING_WORKLOAD,
   LOGIN_USER_WORKLOAD,
   THRESHOLDS,
-} from "./config/config.js";
+} from "../config/config.js";
 
 /*global open*/
 const csvData = new SharedArray("Data creation", function () {
-  return papaparse.parse(open("./data_creation/data.csv"), { header: true })
+  return papaparse.parse(open("../data_creation/data.csv"), { header: true })
     .data;
 });
 

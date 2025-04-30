@@ -2,14 +2,16 @@
   "name": "k6-quickpizza-nft-demo",
   "version": "1.0.0",
   "description": "A k6 quickpizza api NFT demo",
-  "main": "test.js",
+  "main": "./load_tests/multiple-spike-scenarios.js",
   "scripts": {
-    "test": "k6 run multiple-spike-scenarios.js -r ENVIRONMENT=prod",
+    "test": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\\(95\\),p\\(99\\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\\(95\\),p\\(99\\),p\\(99.99\\) ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=test",
+    "dev": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\\(95\\),p\\(99\\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\\(95\\),p\\(99\\),p\\(99.99\\) ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=dev",
+    "prod": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\\(95\\),p\\(99\\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\\(95\\),p\\(99\\),p\\(99.99\\) ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=dev",
     "prepare": "husky install"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github.com/test.git"
+    "url": "git+https://github.com/cosmaprc/k6-quickpizza-nft-poc.git"
   },
   "keywords": [
     "k6",
@@ -17,11 +19,10 @@
     "NFT"
   ],
   "author": "cosmaprc@gmail.com",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/github.com/test/issues"
+    "url": "https://github.com/cosmaprc/k6-quickpizza-nft-poc/issues"
   },
-  "homepage": "https://github.com/github.com/test#readme",
+  "homepage": "https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main#readme",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "@eslint/markdown": "^6.4.0",
