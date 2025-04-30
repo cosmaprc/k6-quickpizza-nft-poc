@@ -60,17 +60,36 @@ export function loginUserScenario() {
 }
 
 export function crudPizzaRatingScenario(authToken) {
-  const requestConfig = () => ({
+  const requestConfigWithTag = (tag) => ({
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
+    tags: Object.assign(
+      {},
+      {
+        name: "Pizza Rating Scenario",
+      },
+      tag,
+    ),
   });
-  let pizzaId = makePizza(`${BASE_URL}/api/pizza`, requestConfig());
+  let pizzaId = makePizza(
+    `${BASE_URL}/api/pizza`,
+    requestConfigWithTag({ name: "Make Pizza" }),
+  );
   const URL = `${BASE_URL}/api/ratings`;
   group("Ratings CRUD operations", () => {
-    let ratingId = createRating(URL, pizzaId, requestConfig());
-    fetchRatings(URL, requestConfig());
-    updateRating(URL, ratingId, 5, requestConfig());
-    deleteRating(URL, requestConfig());
+    let ratingId = createRating(
+      URL,
+      pizzaId,
+      requestConfigWithTag({ name: "Make Pizza" }),
+    );
+    fetchRatings(URL, requestConfigWithTag({ name: "Fetch Ratings" }));
+    updateRating(
+      URL,
+      ratingId,
+      5,
+      requestConfigWithTag({ name: "Update Rating" }),
+    );
+    deleteRating(URL, requestConfigWithTag({ name: "Delete Rating" }));
   });
 }

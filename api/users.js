@@ -8,6 +8,9 @@ export function createUser(URL, username, password) {
       username: username,
       password: password,
     }),
+    {
+      tags: { name: "Create User" },
+    },
   );
   const isSuccessfulCreate = check(res, {
     "Created user": (r) => r.status === 201,
@@ -25,6 +28,9 @@ export function loginUser(URL, username, password) {
       username: username,
       password: password,
     }),
+    {
+      tags: { name: "Login User" },
+    },
   );
   const isSuccessfulLogin = check(res, {
     "Logged in user": (r) => r.status === 200,
