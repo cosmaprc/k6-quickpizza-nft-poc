@@ -118,7 +118,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               },
@@ -156,7 +159,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               }
@@ -209,7 +215,9 @@
               "id": "byNames",
               "options": {
                 "mode": "exclude",
-                "names": ["http_req_s"],
+                "names": [
+                  "http_req_s"
+                ],
                 "prefix": "All except:",
                 "readOnly": true
               }
@@ -891,7 +899,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               },
@@ -925,7 +936,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               }
@@ -1002,9 +1016,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "avg(k6_http_req_duration_p99{testid=~\"$testid\"})",
+          "expr": "avg(k6_http_req_duration_p90{testid=~\"$testid\"})",
           "instant": false,
-          "legendFormat": "99%",
+          "legendFormat": "90%",
           "range": true,
           "refId": "A"
         },
@@ -1096,7 +1110,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               },
@@ -1113,135 +1130,6 @@
         "w": 24,
         "x": 0,
         "y": 27
-      },
-      "id": 25,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum by (method, url) (k6_http_req_duration_p99{testid=~\"$testid\"})",
-          "legendFormat": "{{method}} {{url}}",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "editorMode": "code",
-          "expr": "1.0",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "limit",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "title": "Slow 99.0th Percentile",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "P1809F7CD0C75ACF3"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "B"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [10, 10],
-                  "fill": "dash"
-                }
-              },
-              {
-                "id": "custom.pointSize",
-                "value": 1
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 34
       },
       "id": 24,
       "options": {
@@ -1261,7 +1149,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum by (method, url) (k6_http_req_duration_p95)",
+          "expr": "sum by (method, url) (k6_http_req_duration_p90)",
           "legendFormat": "{{method}} {{url}}",
           "range": true,
           "refId": "A"
@@ -1280,7 +1168,7 @@
           "refId": "B"
         }
       ],
-      "title": "Slow 95.0th Percentile",
+      "title": "Slow 90.0th Percentile",
       "type": "timeseries"
     },
     {
@@ -1354,7 +1242,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               },
@@ -1370,9 +1261,9 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 34
       },
-      "id": 34,
+      "id": 25,
       "options": {
         "legend": {
           "calcs": [],
@@ -1390,7 +1281,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum by (method, url) (k6_http_req_duration_p50)",
+          "expr": "sum by (method, url) (k6_http_req_duration_p95{testid=~\"$testid\"})",
           "legendFormat": "{{method}} {{url}}",
           "range": true,
           "refId": "A"
@@ -1401,7 +1292,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "0.05",
+          "expr": "0.6",
           "hide": false,
           "instant": false,
           "legendFormat": "limit",
@@ -1409,7 +1300,7 @@
           "refId": "B"
         }
       ],
-      "title": "Slow 50.0th Percentile",
+      "title": "Slow 95.0th Percentile",
       "type": "timeseries"
     },
     {
@@ -1418,7 +1309,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 48
+        "y": 41
       },
       "id": 32,
       "panels": [],
@@ -1430,6 +1321,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Request distribution by success and failure",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1483,7 +1375,7 @@
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 42
       },
       "id": 31,
       "options": {
@@ -1495,7 +1387,9 @@
         },
         "pieType": "pie",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -1534,7 +1428,7 @@
           "refId": "B"
         }
       ],
-      "title": "HTTP Request Failures",
+      "title": "Success/Failed Requests",
       "type": "piechart"
     },
     {
@@ -1542,7 +1436,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Errors seen, grouped by url, method and status code",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1656,7 +1550,7 @@
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 42
       },
       "id": 26,
       "options": {
@@ -1665,7 +1559,9 @@
           "countRows": false,
           "enablePagination": true,
           "fields": "",
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "show": false
         },
         "frameIndex": 2,
@@ -1699,19 +1595,27 @@
           "options": {
             "fields": {
               "Value #B": {
-                "aggregations": ["min"],
+                "aggregations": [
+                  "min"
+                ],
                 "operation": "aggregate"
               },
               "Value #C": {
-                "aggregations": ["max"],
+                "aggregations": [
+                  "max"
+                ],
                 "operation": "aggregate"
               },
               "Value #D": {
-                "aggregations": ["mean"],
+                "aggregations": [
+                  "mean"
+                ],
                 "operation": "aggregate"
               },
               "Value #E": {
-                "aggregations": ["mean"],
+                "aggregations": [
+                  "mean"
+                ],
                 "operation": "aggregate"
               },
               "method": {
@@ -1765,6 +1669,7 @@
         "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
+      "description": "Rate of failed requests by url and method ",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1815,7 +1720,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 47
       },
       "id": 30,
       "options": {
@@ -1823,7 +1728,9 @@
         "footer": {
           "countRows": false,
           "fields": "",
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "show": false
         },
         "showHeader": true,
@@ -1845,7 +1752,7 @@
           "refId": "A"
         }
       ],
-      "title": "Percentage Transactions Failed",
+      "title": "Request Failure Rate",
       "type": "table"
     },
     {
@@ -1853,6 +1760,7 @@
         "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
+      "description": "Request error spikes by url and method",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1919,7 +1827,10 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [10, 10],
+                  "dash": [
+                    10,
+                    10
+                  ],
                   "fill": "dash"
                 }
               },
@@ -1935,7 +1846,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 54
+        "y": 47
       },
       "id": 28,
       "options": {
@@ -1984,7 +1895,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 55
       },
       "id": 16,
       "panels": [
@@ -2065,7 +1976,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 448
+            "y": 63
           },
           "id": 14,
           "options": {
@@ -2288,7 +2199,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 448
+            "y": 63
           },
           "id": 15,
           "options": {
@@ -2421,7 +2332,10 @@
                   {
                     "id": "custom.lineStyle",
                     "value": {
-                      "dash": [10, 10],
+                      "dash": [
+                        10,
+                        10
+                      ],
                       "fill": "dash"
                     }
                   }
@@ -2443,7 +2357,10 @@
                   {
                     "id": "custom.lineStyle",
                     "value": {
-                      "dash": [10, 10],
+                      "dash": [
+                        10,
+                        10
+                      ],
                       "fill": "dash"
                     }
                   }
@@ -2458,7 +2375,10 @@
                   {
                     "id": "custom.lineStyle",
                     "value": {
-                      "dash": [10, 10],
+                      "dash": [
+                        10,
+                        10
+                      ],
                       "fill": "dash"
                     }
                   },
@@ -2477,7 +2397,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 448
+            "y": 63
           },
           "id": 18,
           "options": {
@@ -2656,7 +2576,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 456
+            "y": 71
           },
           "id": 17,
           "options": {
@@ -2665,7 +2585,9 @@
               "countRows": false,
               "enablePagination": true,
               "fields": "",
-              "reducer": ["sum"],
+              "reducer": [
+                "sum"
+              ],
               "show": false
             },
             "frameIndex": 2,
@@ -2741,19 +2663,27 @@
               "options": {
                 "fields": {
                   "Value #B": {
-                    "aggregations": ["min"],
+                    "aggregations": [
+                      "min"
+                    ],
                     "operation": "aggregate"
                   },
                   "Value #C": {
-                    "aggregations": ["max"],
+                    "aggregations": [
+                      "max"
+                    ],
                     "operation": "aggregate"
                   },
                   "Value #D": {
-                    "aggregations": ["mean"],
+                    "aggregations": [
+                      "mean"
+                    ],
                     "operation": "aggregate"
                   },
                   "Value #E": {
-                    "aggregations": ["mean"],
+                    "aggregations": [
+                      "mean"
+                    ],
                     "operation": "aggregate"
                   },
                   "method": {
@@ -2812,7 +2742,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 63
+        "y": 56
       },
       "id": 11,
       "panels": [
@@ -2890,7 +2820,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 724
+            "y": 739
           },
           "id": 12,
           "options": {
@@ -2899,7 +2829,9 @@
               "countRows": false,
               "enablePagination": true,
               "fields": "",
-              "reducer": ["sum"],
+              "reducer": [
+                "sum"
+              ],
               "show": false
             },
             "frameIndex": 2,
@@ -2933,7 +2865,10 @@
             {
               "id": "labelsToFields",
               "options": {
-                "keepLabels": ["__name__", "check"],
+                "keepLabels": [
+                  "__name__",
+                  "check"
+                ],
                 "mode": "columns"
               }
             },
@@ -2942,7 +2877,9 @@
               "options": {
                 "fields": {
                   "Value": {
-                    "aggregations": ["mean"],
+                    "aggregations": [
+                      "mean"
+                    ],
                     "operation": "aggregate"
                   },
                   "check": {
@@ -2950,7 +2887,10 @@
                     "operation": "groupby"
                   },
                   "k6_checks_rate": {
-                    "aggregations": ["sum", "count"],
+                    "aggregations": [
+                      "sum",
+                      "count"
+                    ],
                     "operation": "aggregate"
                   }
                 }
@@ -3045,7 +2985,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 724
+            "y": 739
           },
           "id": 13,
           "options": {
@@ -3088,7 +3028,7 @@
             "h": 5,
             "w": 24,
             "x": 0,
-            "y": 732
+            "y": 747
           },
           "id": 23,
           "options": {
@@ -3112,7 +3052,10 @@
   "preload": false,
   "refresh": "",
   "schemaVersion": 41,
-  "tags": ["prometheus", "k6"],
+  "tags": [
+    "prometheus",
+    "k6"
+  ],
   "templating": {
     "list": [
       {

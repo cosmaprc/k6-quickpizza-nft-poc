@@ -33,7 +33,7 @@ export function handleSummary(data) {
     stdout: textSummary(data, { indent: " ", enableColors: true }),
   };
 }
-
+console.log(BASE_URL);
 export function setup() {
   const USERNAME = `${randomString(10)}@example.com`;
   const PASSWORD = "secret";

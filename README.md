@@ -118,6 +118,10 @@ cd ./data_creation
 
 # Quickpizza performance analysis
 
+First the purpose of a spike test: "A spike test verifies whether the system survives and performs under sudden and massive rushes of utilization."
+
+## Test setup
+
 There are 7 calls, depending on the script run, they are all in the same scenario or in multiple. Each call has a sleep(1) at the end for more predictible RPS.
 
 Spike test shape:
@@ -132,12 +136,11 @@ Spike test shape:
   gracefulRampDown: "0s",
 ```
 
-Set some potentially sensible default limits:
+Set some potentially sensible default limits(Let's assume these are our SLOs):
 
 ```
-50% - 50ms
-95% - 300ms
-99% - 1s
+90% - 300ms
+95% - 600ms
 ```
 
 Add some extra graphs to the k6 Prometheus dashboard:
@@ -153,75 +156,128 @@ Latency:
 
 Fresh start the local quickpizza setup using docker compose up/down before each test run to avoid issues.
 
-Take a baseline spike scenario targeting 1 RPS per endpoint, 7 endpoints, so 7 RPS overall
+## Test runs
 
-From the start we can see that POST /api/pizza is unacceptably slow even at this low RPS :
-
-```
-{url:/api/pizza,method:POST}
-✗ 'p(50)<50' p(50)=80.72ms
-✗ 'p(95)<300' p(95)=571.76ms
-✓ 'p(99)<1000' p(99)=591.75ms
-```
-
-3 - Restart quickpizza app and rerun test at 10x Rps, so 10 RPS per endpoint or 70 RPS overall
+Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
 ```
- ✗ { url:/api/pizza,method:POST }...............: min=3.75ms   avg=192.85ms med=88.54ms  max=691.03ms p(50)=88.54ms  p(95)=592.67ms p(99)=639.97ms
+npm run dev
 ```
 
-10x 700 overall, so 70 per endpoint
-
-more than 10% of requests failed
+1 - Take a baseline spike scenario
 
 ```
-✗ http_req_duration..............................: min=271.91µs avg=388.22ms med=84.75ms  max=11.99s   p(50)=84.75ms  p(95)=1.69s   p(99)=3.43s
-       { expected_response:true }...................: min=481.79µs avg=386.1ms  med=92.33ms  max=11.99s   p(50)=92.33ms  p(95)=1.67s   p(99)=3.56s
-     ✗ { url:/api/pizza,method:POST }...............: min=3.45ms   avg=693.06ms med=571.28ms max=2.77s    p(50)=571.28ms p(95)=1.69s   p(99)=1.97s
-     ✗ { url:/api/ratings,method:POST }.............: min=428.15µs avg=350.22ms med=46.41ms  max=10.54s   p(50)=46.41ms  p(95)=1.79s   p(99)=3.66s
-     ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=286.98µs avg=424.68ms med=9.74ms   max=11.99s   p(50)=9.74ms   p(95)=2.15s   p(99)=4.43s
-     ✗ { url:/api/ratings/{id},method:PUT }.........: min=271.91µs avg=395.89ms med=8.31ms   max=8.78s    p(50)=8.31ms   p(95)=2.05s   p(99)=4.02s
-     ✗ { url:/api/users/token/login,method:POST }...: min=44.76ms  avg=91.49ms  med=69.17ms  max=429.51ms p(50)=69.17ms  p(95)=206.5ms p(99)=283.87ms
-   ✗ http_req_failed................................: 10.49% ✓ 3182       ✗ 27142
+scenarios: (100.00%) 2 scenarios, 7 max VUs, 2m0s max duration (incl. graceful stop):
+        * createAndLoginUserScenario: Up to 2 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: createAndLoginUserScenario, gracefulStop: 30s)
+        * crudPizzaRatingScenario: Up to 5 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: crudPizzaRatingScenario, gracefulStop: 30s)
 ```
 
-350 max VUs so targeting 350 max RPS
+From the start we can see that the test has failed because the POST /api/pizza is unacceptably slow even at this low RPS:
 
 ```
- ✓ http_req_duration..............................: min=476.98µs avg=52.52ms  med=12.57ms  max=860.8ms  p(50)=12.57ms  p(95)=230.3ms  p(99)=602.63ms
-       { expected_response:true }...................: min=476.98µs avg=52.52ms  med=12.57ms  max=860.8ms  p(50)=12.57ms  p(95)=230.3ms  p(99)=602.63ms
-     ✗ { url:/api/pizza,method:POST }...............: min=4.74ms   avg=226.51ms med=113.57ms max=860.8ms  p(50)=113.57ms p(95)=625.82ms p(99)=709.79ms
-     ✓ { url:/api/ratings,method:POST }.............: min=653.05µs avg=5.21ms   med=1.18ms   max=82.58ms  p(50)=1.18ms   p(95)=24.44ms  p(99)=46.96ms
-     ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=476.98µs avg=5.58ms   med=1.23ms   max=103.85ms p(50)=1.23ms   p(95)=26.01ms  p(99)=52.8ms
-     ✓ { url:/api/ratings/{id},method:PUT }.........: min=511.72µs avg=5.16ms   med=1.11ms   max=83.28ms  p(50)=1.11ms   p(95)=23.43ms  p(99)=46.38ms
-     ✗ { url:/api/users/token/login,method:POST }...: min=44.4ms   avg=54.2ms   med=52.54ms  max=115.32ms p(50)=52.54ms  p(95)=67.09ms  p(99)=83.89ms
-   ✓ http_req_failed................................: 0.00%   ✓ 0          ✗ 20095
+✓ http_req_duration..............................: min=593.74µs avg=48.02ms  med=1.27ms   max=638.47ms p(90)=60.29ms  p(95)=387.12ms
+    { expected_response:true }...................: min=593.74µs avg=48.02ms  med=1.27ms   max=638.47ms p(90)=60.29ms  p(95)=387.12ms
+  ✗ { url:/api/pizza,method:POST }...............: min=9.61ms   avg=233.28ms med=105.02ms max=638.47ms p(90)=544.56ms p(95)=552.68ms
+  ✓ { url:/api/ratings,method:POST }.............: min=803.76µs avg=1.2ms    med=1.24ms   max=1.6ms    p(90)=1.39ms   p(95)=1.46ms
+  ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=693.03µs avg=1.01ms   med=1ms      max=1.37ms   p(90)=1.17ms   p(95)=1.23ms
+  ✓ { url:/api/ratings/{id},method:PUT }.........: min=593.74µs avg=1.09ms   med=1.08ms   max=1.9ms    p(90)=1.26ms   p(95)=1.29ms
+  ✓ { url:/api/users/token/login,method:POST }...: min=45.1ms   avg=46.94ms  med=46.44ms  max=53.19ms  p(90)=49.47ms  p(95)=49.8ms
+✓ http_req_failed................................: 0.00%   ✓ 0        ✗ 406
 ```
 
-350 max VUs targeting 350 RPS
+Since latency fails the test from the start, let's continue running spike test in a binary search style until we find a peak spike TPS where we have an acceptable error count.
+
+2 - 70 max VUs targeting 70 RPS
 
 ```
-  ✗ http_req_duration..............................: min=273.26µs avg=213.04ms med=60.73ms  max=5.11s    p(50)=60.73ms  p(95)=991.49ms p(99)=1.74s
-       { expected_response:true }...................: min=516.59µs avg=208.54ms med=61.36ms  max=5.11s    p(50)=61.36ms  p(95)=938.54ms p(99)=1.71s
-     ✗ { url:/api/pizza,method:POST }...............: min=3.68ms   avg=473.33ms med=402.53ms max=2.11s    p(50)=402.53ms p(95)=1.29s    p(99)=1.69s
-     ✗ { url:/api/ratings,method:POST }.............: min=548.61µs avg=172.37ms med=15.45ms  max=3.33s    p(50)=15.45ms  p(95)=921.42ms p(99)=1.77s
-     ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=273.26µs avg=216.88ms med=12.32ms  max=3.81s    p(50)=12.32ms  p(95)=1.16s    p(99)=2.09s
-     ✗ { url:/api/ratings/{id},method:PUT }.........: min=305.07µs avg=202.36ms med=10.95ms  max=4.14s    p(50)=10.95ms  p(95)=1.05s    p(99)=1.85s
-     ✗ { url:/api/users/token/login,method:POST }...: min=44.17ms  avg=78.03ms  med=61.53ms  max=412.01ms p(50)=61.53ms  p(95)=172.56ms p(99)=234.28ms
-   ✗ http_req_failed................................: 2.55%  ✓ 666        ✗ 25439
+✓ http_req_duration..............................: min=573.75µs avg=44.23ms  med=1.12ms   max=732.42ms p(90)=57.01ms p(95)=204.31ms
+    { expected_response:true }...................: min=573.75µs avg=44.23ms  med=1.12ms   max=732.42ms p(90)=57.01ms p(95)=204.31ms
+  ✗ { url:/api/pizza,method:POST }...............: min=4.08ms   avg=204.64ms med=90.73ms  max=732.42ms p(90)=548.6ms p(95)=598.28ms
+  ✓ { url:/api/ratings,method:POST }.............: min=658.41µs avg=1ms      med=948.96µs max=3.56ms   p(90)=1.22ms  p(95)=1.38ms
+  ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=573.75µs avg=823.47µs med=765.2µs  max=2.19ms   p(90)=1.01ms  p(95)=1.18ms
+  ✓ { url:/api/ratings/{id},method:PUT }.........: min=579.95µs avg=874.34µs med=812.46µs max=2.67ms   p(90)=1.11ms  p(95)=1.28ms
+  ✓ { url:/api/users/token/login,method:POST }...: min=44.02ms  avg=47.01ms  med=46.68ms  max=55.31ms  p(90)=49.52ms p(95)=50.34ms
+✓ http_req_failed................................: 0.00%   ✓ 0         ✗ 4050
 ```
 
-441 max VUs targeting 441 RPS
+3 - 700 max VUs targeting 700 RPS
+
+More than 10% of requests failed, 10 times past the threshold, let's reduce RPS
 
 ```
-✗ http_req_duration..............................: min=367.57µs avg=104.35ms med=50.94ms  max=1.97s    p(50)=50.94ms  p(95)=510.87ms p(99)=851.71ms
-    { expected_response:true }...................: min=494.79µs avg=103.92ms med=50.96ms  max=1.94s    p(50)=50.96ms  p(95)=509.74ms p(99)=844.7ms
-  ✗ { url:/api/pizza,method:POST }...............: min=4.97ms   avg=323.92ms med=240.65ms max=1.97s    p(50)=240.65ms p(95)=825.82ms p(99)=1.13s
-  ✓ { url:/api/ratings,method:POST }.............: min=507.51µs avg=52.72ms  med=4.47ms   max=1.82s    p(50)=4.47ms   p(95)=248.18ms p(99)=632.74ms
-  ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=374.32µs avg=69.58ms  med=6.09ms   max=1.94s    p(50)=6.09ms   p(95)=341.18ms p(99)=747.63ms
-  ✗ { url:/api/ratings/{id},method:PUT }.........: min=367.57µs avg=64.56ms  med=5.51ms   max=1.66s    p(50)=5.51ms   p(95)=320.16ms p(99)=748.31ms
-  ✗ { url:/api/users/token/login,method:POST }...: min=44.46ms  avg=68.43ms  med=57.13ms  max=242.63ms p(50)=57.13ms  p(95)=128.69ms p(99)=177.93ms
-✓ http_req_failed................................: 0.14%  ✓ 36         ✗ 24080
+✗ http_req_duration..............................: min=279.37µs avg=389.66ms med=85.89ms  max=9.96s    p(90)=1.21s    p(95)=1.7s
+    { expected_response:true }...................: min=473.74µs avg=385.53ms med=92.66ms  max=9.96s    p(90)=1.09s    p(95)=1.65s
+  ✗ { url:/api/pizza,method:POST }...............: min=3.83ms   avg=705.18ms med=573.06ms max=2.95s    p(90)=1.54s    p(95)=1.75s
+  ✗ { url:/api/ratings,method:POST }.............: min=442.65µs avg=361.56ms med=49.83ms  max=9.33s    p(90)=1.11s    p(95)=1.89s
+  ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=297.96µs avg=412.86ms med=10.7ms   max=9.61s    p(90)=1.32s    p(95)=2s
+  ✗ { url:/api/ratings/{id},method:PUT }.........: min=279.37µs avg=390.99ms med=8.68ms   max=9.2s     p(90)=1.25s    p(95)=1.99s
+  ✓ { url:/api/users/token/login,method:POST }...: min=44.65ms  avg=99.46ms  med=69.28ms  max=631.66ms p(90)=188.21ms p(95)=248.85ms
+✗ http_req_failed................................: 10.10% ✓ 3061       ✗ 27218
+```
+
+4 - 350 max VUs so targeting 350 max RPS
+
+```
+scenarios: (100.00%) 2 scenarios, 350 max VUs, 2m0s max duration (incl. graceful stop):
+        * createAndLoginUserScenario: Up to 100 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: createAndLoginUserScenario, gracefulStop: 30s)
+        * crudPizzaRatingScenario: Up to 250 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: crudPizzaRatingScenario, gracefulStop: 30s)
+```
+
+Better, though latency is still an issue. Let's increase it again.
+
+```
+✓ http_req_duration..............................: min=495.79µs avg=52.88ms med=12.64ms  max=804.97ms p(90)=90.24ms  p(95)=226.08ms
+    { expected_response:true }...................: min=495.79µs avg=52.88ms med=12.64ms  max=804.97ms p(90)=90.24ms  p(95)=226.08ms
+  ✗ { url:/api/pizza,method:POST }...............: min=3.56ms   avg=226.5ms med=112.58ms max=804.97ms p(90)=562.01ms p(95)=616.44ms
+  ✓ { url:/api/ratings,method:POST }.............: min=684.87µs avg=5.58ms  med=1.21ms   max=140.42ms p(90)=14.04ms  p(95)=26.02ms
+  ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=495.79µs avg=5.88ms  med=1.18ms   max=160.77ms p(90)=15.95ms  p(95)=27.02ms
+  ✓ { url:/api/ratings/{id},method:PUT }.........: min=524.33µs avg=5.48ms  med=1.17ms   max=133.93ms p(90)=15.28ms  p(95)=23.08ms
+  ✓ { url:/api/users/token/login,method:POST }...: min=44.27ms  avg=54.44ms med=52.57ms  max=133.29ms p(90)=63.02ms  p(95)=68.67ms
+✓ http_req_failed................................: 0.00%   ✓ 0          ✗ 20087
+```
+
+6 - 441 max VUs targeting 441 RPS
+
+```
+scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful stop):
+        * createAndLoginUserScenario: Up to 126 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: createAndLoginUserScenario, gracefulStop: 30s)
+        * crudPizzaRatingScenario: Up to 315 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: crudPizzaRatingScenario, gracefulStop: 30s)
+```
+
+441 max virtual users or RPS seems to be within our 1% error threshold so barring the attrocious latency, we might say we've found the limit at which the system is still usable in a sudden spike scenario.
+
+```
+✗ http_req_duration..............................: min=362.34µs avg=105.13ms med=51.02ms max=2.12s    p(90)=303.95ms p(95)=513.53ms
+    { expected_response:true }...................: min=467.07µs avg=105.02ms med=51.02ms max=2.12s    p(90)=303.88ms p(95)=513.03ms
+  ✗ { url:/api/pizza,method:POST }...............: min=3.82ms   avg=323.03ms med=251ms   max=1.62s    p(90)=672.63ms p(95)=795.89ms
+  ✓ { url:/api/ratings,method:POST }.............: min=607.81µs avg=53.09ms  med=4.96ms  max=1.51s    p(90)=162.11ms p(95)=250.49ms
+  ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=410.41µs avg=70.48ms  med=7.38ms  max=1.42s    p(90)=219.68ms p(95)=381.18ms
+  ✓ { url:/api/ratings/{id},method:PUT }.........: min=362.34µs avg=65.92ms  med=5.8ms   max=1.72s    p(90)=209.76ms p(95)=343.67ms
+  ✓ { url:/api/users/token/login,method:POST }...: min=44.54ms  avg=68.02ms  med=57.17ms max=245.44ms p(90)=102.94ms p(95)=127.97ms
+✓ http_req_failed................................: 0.04%  ✓ 12         ✗ 24088
+```
+
+Now let's compare this with a live prod run:
+
+````
+    scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful stop):
+              * createAndLoginUserScenario: Up to 126 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: createAndLoginUserScenario, gracefulStop: 30s)
+              * crudPizzaRatingScenario: Up to 315 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: crudPizzaRatingScenario, gracefulStop: 30s)
+              ```
+
+
+````
+
+     ✗ http_req_duration..............................: min=92.17ms avg=1.57s    med=546.54ms max=25.39s   p(90)=4.39s    p(95)=6.29s
+       { expected_response:true }...................: min=92.49ms avg=1.82s    med=647.1ms  max=25.39s   p(90)=5.2s     p(95)=7.5s
+     ✗ { url:/api/pizza,method:POST }...............: min=93.29ms avg=2.37s    med=1.87s    max=20.41s   p(90)=4.81s    p(95)=6.16s
+     ✗ { url:/api/ratings,method:POST }.............: min=92.96ms avg=976.6ms  med=299.85ms max=16.2s    p(90)=2.8s     p(95)=4.23s
+     ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=92.17ms avg=589.15ms med=200.77ms max=8.29s    p(90)=1.39s    p(95)=2.3s
+     ✗ { url:/api/ratings/{id},method:PUT }.........: min=92.72ms avg=549.98ms med=197.6ms  max=13.19s   p(90)=1.29s    p(95)=2.1s
+     ✗ { url:/api/users/token/login,method:POST }...: min=93.25ms avg=4.71s    med=3.89s    max=25.39s   p(90)=9.33s    p(95)=11.36s
+
+✗ http_req_failed................................: 50.36% ✓ 5050 ✗ 4976
+
 ```
 
 # TODOS
@@ -230,3 +286,4 @@ more than 10% of requests failed
 - The scenarios all run either a local smoke test in the test env or a simplistic spike test that does not control the rate of requests per second sent to the api very well. An improvement would be to use another scenario type like the constant or ramping arrival rate ones to better control RPS per endpoint under test. Also having a stress test coupled with a longer soak test would likely be the way to go.
 - The default quickpizza grafana dashboard does not show the per endpoint/transaction RPS rates in percentiles over time, so we could improve on this to get a better view of how the RPS changes per endpoint during the test run.
 - The data creation example uses CSV files but we could switch to JSON based files using https://msgpack.org/index.html for "efficient binary serialization"
+```
