@@ -1,5 +1,8 @@
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import papaparse from "https://jslib.k6.io/papaparse/5.1.1/index.js";
+// This will export to HTML as filename "result.html" AND also stdout using the text summary
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { group, sleep } from "k6";
 import { SharedArray } from "k6/data";
 
@@ -31,6 +34,13 @@ export const options = {
   },
   thresholds: THRESHOLDS,
 };
+
+export function handleSummary(data) {
+  return {
+    "result.html": htmlReport(data),
+    stdout: textSummary(data, { indent: " ", enableColors: true }),
+  };
+}
 
 export function createAndLoginUserScenario() {
   const USERNAME = `${randomString(10)}@example.com`;
