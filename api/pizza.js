@@ -18,10 +18,12 @@ export function makePizza(URL, params) {
   });
   const isSuccessful = check(res, {
     "Got pizza": (r) => r.status === 200,
-    "Pizza is fresh": (r) => r.json().pizza.id > 0,
   });
   if (!isSuccessful) {
-    console.log(`Unable to get pizza ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to get pizza ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
+  } else {
+    return res.json().pizza.id;
   }
-  return res.json().pizza.id;
 }

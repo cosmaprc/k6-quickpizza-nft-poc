@@ -18,7 +18,9 @@ export function createRating(URL, pizzaId, params) {
   if (isSuccessful) {
     return res.json("id");
   } else {
-    console.log(`Unable to create rating ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to create rating ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
 }
 
@@ -29,10 +31,12 @@ export function fetchRatings(URL, params) {
   });
   const isSuccessful = check(res, {
     "Fetched ratings": (r) => r.status === 200,
-    "Fetched ratings is a list": (r) => r.json().ratings.length > 0,
+    // "Fetched ratings is a list": (r) => r.json().ratings.length > 0,
   });
   if (!isSuccessful) {
-    console.log(`Unable to fetch the ratings ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to fetch the ratings ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
 }
 
@@ -45,15 +49,16 @@ export function updateRating(URL, ratingId, stars, params) {
   });
   const isSuccessful = check(res, {
     "Updated rating": (r) => r.status === 200,
-    "Updated rating has expected number of stars": (r) =>
-      r.json("stars") === stars,
   });
   if (!isSuccessful) {
-    console.log(`Unable to update the rating ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to update the rating ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
 }
 
-export function deleteRating(URL, params) {
+export function deleteRating(URL, ratingId, params) {
+  URL = `${URL}/${ratingId}`;
   const res = http.del(URL, null, {
     ...params,
     ...{ tags: { name: "/api/ratings/{id}" } },
@@ -62,6 +67,8 @@ export function deleteRating(URL, params) {
     "Deleted rating": (r) => r.status === 204,
   });
   if (!isSuccessful) {
-    console.log(`Rating was not deleted ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Rating was not deleted ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
 }

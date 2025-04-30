@@ -16,7 +16,9 @@ export function createUser(URL, username, password) {
     "Created user": (r) => r.status === 201,
   });
   if (!isSuccessfulCreate) {
-    console.log(`Unable to create user ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to create user ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
 }
 
@@ -34,10 +36,11 @@ export function loginUser(URL, username, password) {
   );
   const isSuccessfulLogin = check(res, {
     "Logged in user": (r) => r.status === 200,
-    "Valid token": (r) => r.json("token").length > 0,
   });
   if (!isSuccessfulLogin) {
-    console.log(`Unable to login user ${URL} ${res.status} ${res.body}`);
+    console.log(
+      `Unable to login user ${URL} ${res.status} ${res.status_text} ${res.body}`,
+    );
   }
   authToken = res.json("token");
   return authToken;

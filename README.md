@@ -10,7 +10,7 @@ This project reuses code from the https://github.com/grafana/k6-oss-workshop pro
 
 # Covered endponts
 
-```
+```{.bash }
 POST /api/users             # Register a new user
 POST /api/users/token/login # User login
 
@@ -20,7 +20,6 @@ POST /api/ratings           # Create a new rating
 GET /api/ratings            # Get all ratings by user
 PUT /api/ratings/{id}       # Update a rating
 DELETE /api/ratings/{id}    # Delete a rating
-
 ```
 
 # Structure

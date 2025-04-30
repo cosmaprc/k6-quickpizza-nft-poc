@@ -1,6 +1,6 @@
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 import papaparse from "https://jslib.k6.io/papaparse/5.1.1/index.js";
-import { group } from "k6";
+import { group, sleep } from "k6";
 import { SharedArray } from "k6/data";
 
 import { makePizza } from "../api/pizza.js";
@@ -13,9 +13,8 @@ import {
 import { createUser, loginUser } from "../api/users.js";
 import {
   BASE_URL,
-  CREATE_USER_WORKLOAD,
+  CREATE_AND_LOGIN_USER_WORKLOAD,
   CRUD_PIZZA_RATING_WORKLOAD,
-  LOGIN_USER_WORKLOAD,
   THRESHOLDS,
 } from "../config/config.js";
 
@@ -27,28 +26,20 @@ const csvData = new SharedArray("Data creation", function () {
 
 export const options = {
   scenarios: {
-    createUserScenario: CREATE_USER_WORKLOAD,
-    loginUserScenario: LOGIN_USER_WORKLOAD,
+    createAndLoginUserScenario: CREATE_AND_LOGIN_USER_WORKLOAD,
     crudPizzaRatingScenario: CRUD_PIZZA_RATING_WORKLOAD,
   },
   thresholds: THRESHOLDS,
 };
 
-console.log("BASE_URL", BASE_URL);
-console.log("CREATE_USER_WORKLOAD", CREATE_USER_WORKLOAD);
-
-export function createUserScenario() {
-  const USERNAME = `${randomString(10)}@example.com`;
-  const PASSWORD = "secret";
-  createUser(`${BASE_URL}/api/users`, USERNAME, PASSWORD);
-}
-
-export function loginUserScenario() {
+export function createAndLoginUserScenario() {
   const USERNAME = `${randomString(10)}@example.com`;
   const PASSWORD = "secret";
   group("Users operations", () => {
     createUser(`${BASE_URL}/api/users`, USERNAME, PASSWORD);
+    sleep(1);
     loginUser(`${BASE_URL}/api/users/token/login`, USERNAME, PASSWORD);
+    sleep(1);
   });
 }
 
@@ -60,11 +51,16 @@ export function crudPizzaRatingScenario() {
     },
   });
   let pizzaId = makePizza(`${BASE_URL}/api/pizza`, requestConfig());
+  sleep(1);
   const URL = `${BASE_URL}/api/ratings`;
   group("Ratings CRUD operations", () => {
     let ratingId = createRating(URL, pizzaId, requestConfig());
+    sleep(1);
     fetchRatings(URL, requestConfig());
+    sleep(1);
     updateRating(URL, ratingId, 5, requestConfig());
-    deleteRating(URL, requestConfig());
+    sleep(1);
+    deleteRating(URL, ratingId, requestConfig());
+    sleep(1);
   });
 }

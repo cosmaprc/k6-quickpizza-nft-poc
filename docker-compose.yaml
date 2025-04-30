@@ -16,7 +16,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yaml
 
     volumes:
-    - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
 
   grafana:
     image: grafana/grafana:latest
@@ -29,7 +29,7 @@ services:
       - GF_AUTH_BASIC_ENABLED=false
     volumes:
       - ./config/grafana:/etc/grafana/provisioning/
-  
+
 networks:
   default:
     name: default_network

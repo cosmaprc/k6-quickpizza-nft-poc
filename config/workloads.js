@@ -1,10 +1,22 @@
 export const spikeWorkload = {
   executor: "ramping-vus",
+  startVUs: 0,
   stages: [
-    { duration: "30s", target: 10 }, // fast ramp-up to a high point
-    // No plateau
-    { duration: "15s", target: 0 }, // quick ramp-down to 0 users
+    { duration: "1m", target: 7 * 1 },
+    { duration: "1m", target: 0 },
   ],
+  gracefulRampDown: "0s",
+};
+
+export const stressWorkload = {
+  executor: "ramping-vus",
+  startVUs: 0,
+  stages: [
+    { duration: "1m", target: 10 * 7 },
+    { duration: "2m", target: 10 * 7 },
+    { duration: "1m", target: 0 },
+  ],
+  gracefulRampDown: "0s",
 };
 
 export const testWorkload = {
@@ -13,38 +25,23 @@ export const testWorkload = {
   vus: 1,
 };
 
-export const createUserScenarioTestWorkload = {
+export const createAndLoginUserScenarioTestWorkload = {
   executor: "shared-iterations",
-  exec: "createUserScenario",
+  exec: "createAndLoginUserScenario",
   iterations: 1,
   vus: 1,
 };
 
-export const createUserScenarioSpikeWorkload = {
-  exec: "createUserScenario",
+export const createAndLoginUserScenarioSpikeWorkload = {
+  exec: "createAndLoginUserScenario",
   executor: "ramping-vus",
+  startVUs: 0,
   stages: [
-    { duration: "30s", target: 10 }, // fast ramp-up to a high point
-    // No plateau
-    { duration: "15s", target: 0 }, // quick ramp-down to 0 users
+    { duration: "1m", target: 10 * 2 },
+    { duration: "2m", target: 10 * 2 },
+    { duration: "1m", target: 0 },
   ],
-};
-
-export const loginUserScenarioTestWorkload = {
-  executor: "shared-iterations",
-  exec: "loginUserScenario",
-  iterations: 1,
-  vus: 1,
-};
-
-export const loginUserScenarioSpikeWorkload = {
-  exec: "loginUserScenario",
-  executor: "ramping-vus",
-  stages: [
-    { duration: "30s", target: 10 }, // fast ramp-up to a high point
-    // No plateau
-    { duration: "15s", target: 0 }, // quick ramp-down to 0 users
-  ],
+  gracefulRampDown: "0s",
 };
 
 export const crudPizzaRatingScenarioTestWorkload = {
@@ -57,9 +54,11 @@ export const crudPizzaRatingScenarioTestWorkload = {
 export const crudPizzaRatingScenarioSpikeWorkload = {
   exec: "crudPizzaRatingScenario",
   executor: "ramping-vus",
+  startVUs: 0,
   stages: [
-    { duration: "30s", target: 10 }, // fast ramp-up to a high point
-    // No plateau
-    { duration: "15s", target: 0 }, // quick ramp-down to 0 users
+    { duration: "1m", target: 10 * 5 },
+    { duration: "2m", target: 10 * 5 },
+    { duration: "1m", target: 0 },
   ],
+  gracefulRampDown: "0s",
 };
