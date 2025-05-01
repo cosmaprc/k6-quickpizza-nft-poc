@@ -145,15 +145,15 @@ Set some potentially sensible default limits(Let's assume these are our SLOs):
 ```
 
 Add some extra graphs to the k6 Prometheus dashboard:
-Latency:
 
-- Reponse times per percentile we monitor
-- Response times per percentile and per endpoint url we test
-  Errors
-- Success/Failed Requests - Request distribution by success and failure
-- Errors - Errors seen, grouped by url, method and status code
-- Request Failure Rate - Rate of failed requests by url and method
-- Error Spike - Request error spikes by url and method
+- Latency:
+  - Reponse times per percentile we monitor
+  - Response times per percentile and per endpoint url we test
+- Errors
+  - Success/Failed Requests - Request distribution by success and failure
+  - Errors - Errors seen, grouped by url, method and status code
+  - Request Failure Rate - Rate of failed requests by url and method
+  - Error Spike - Request error spikes by url and method
 
 Fresh start the local quickpizza setup using docker compose up/down before each test run to avoid issues.
 
