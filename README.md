@@ -71,10 +71,10 @@ npm run dev # also points to the local API
 npm run prod # points to the live API
 ```
 
-# Select the load test to run
+# Or select the load test to run
 
 ```
-export "K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max"
+export "K6_PROMETHEUS_RW_TREND_STATS=p(90),p(95),min,max"
 
 k6 run --out=experimental-prometheus-rw ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=dev # test/dev/prod
 k6 run --out=experimental-prometheus-rw ./load_tests/single-spike-scenario.js -e ENVIRONMENT=dev
