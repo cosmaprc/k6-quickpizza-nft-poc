@@ -63,7 +63,7 @@ docker compose down
 
 ## Run the main load test script
 
-Main test scripts are /load_tests/multiple-spike-scenarios.js for test and dev and /load_tests/single-spike-scenario.js for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
+Main test scripts are [multiple-spike-scenarios.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios.js) for test and dev and [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js) for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
 
 ***Note, to run npm commands you will need to install node and npm which you can do with the node version manager [nvm](https://github.com/nvm-sh/nvm) , alternatively, the scripts can be run directly using the k6 command which will also need to be installed.***
 
@@ -91,7 +91,9 @@ cd ../
 K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=prod # test/dev/prod
 ```
 
-## Building a k6 version that can write to the filesystem for data creation
+## (Optional) Building a k6 version that can write to the filesystem for data creation
+
+***This is optional and only if you want to run the [multiple-spike-scenarios-with-data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios-with-data-creation.js) script which needs the [data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/data_creation/data-creation.js) script to be run first, which in turn needs a k6 version that can write to the filesystem***
 
 ### Install golang and set up the PATH so it can run xk6
 
@@ -290,7 +292,7 @@ scenarios: (100.00%) 1 scenario, 35 max VUs, 2m0s max duration (incl. graceful s
 
 ## TODOS
 
-- Secrets like the user password used to atuehnticate with the API can be saved using gitcrypt locally or in a k8s environment as secret files mounted in the test pods or even pulled from Vault.
+- Secrets like the user password used to authenticate with the API can be saved using gitcrypt locally or in a k8s environment as secret files mounted in the test pods or even pulled from Vault.
 - The scenarios all run either a local smoke test in the test env or a simplistic spike test that does not control the rate of requests per second sent to the api very well. An improvement would be to use another scenario type like the constant or ramping arrival rate ones to better control RPS per endpoint under test. Also having a stress test coupled with a longer soak test would likely be the way to go.
 - The default quickpizza grafana dashboard does not show the per endpoint/transaction RPS rates in percentiles over time, so we could improve on this to get a better view of how the RPS changes per endpoint during the test run.
 - The data creation example uses CSV files but we could switch to JSON based files using [msgpack](https://msgpack.org/index.html) for "efficient binary serialization"
