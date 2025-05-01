@@ -31,6 +31,7 @@ k6-quickpizza-nft-poc/
 ├─ data_creation/ # Contains the data creation scripts and their output files
 ├─ libs/          # Contains the custom k6 library that can write to filesystem
 ├─ load_tests/    # Contains the k6 load test scripts
+├─ reports/       # Report files
 ├─ utils/         # Utility functions for the load test scripts
 ```
 
