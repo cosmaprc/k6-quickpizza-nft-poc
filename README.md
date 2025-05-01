@@ -159,6 +159,8 @@ Fresh start the local quickpizza setup using docker compose up/down before each 
 
 ## Test runs
 
+\*Note, report files for these runs, inlcuding prod can be found in /reports
+
 Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
 ```
