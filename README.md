@@ -2,13 +2,13 @@
 
 This is a POC of performance/non-functional testing a backend API using Grafana k6.
 
-Since https://test-api.k6.io is now deprecated and redirects to https://quickpizza.grafana.com I've used the Quickpizza API https://github.com/grafana/quickpizza . This project has a https://github.com/grafana/quickpizza/blob/main/quickpizza-openapi.yaml file that can be loaded into https://editor.swagger.io/ to get a view of how it works and even test it directly from swagger, making it easy to write test scripts for it's endpoints.
+Since [test-api.k6.io](https://test-api.k6.io) is now deprecated and redirects to https://quickpizza.grafana.com I've used the [Quickpizza API](https://github.com/grafana/quickpizza). This project has a [openapi.yaml](https://github.com/grafana/quickpizza/blob/main/quickpizza-openapi.yaml) file that can be loaded into [Swagger editor](https://editor.swagger.io/) to get a view of how it works and even test it directly from swagger, making it easy to write test scripts for it's endpoints.
 
 The project is built using plain javascript, npm and node and uses eslint for linting, prettier for code formatting and lint-staged to run these on pre-commit, ensuring no unchecked code gets merged.
 
-This project reuses code from the https://github.com/grafana/k6-oss-workshop project to run Grafana and Prometheus for Observability.
+This project reuses code from the [k6-oss-workshop](https://github.com/grafana/k6-oss-workshop) project to run Grafana and Prometheus for Observability.
 
-# Covered endponts
+## Covered endponts
 
 ```{.bash }
 POST /api/users             # Register a new user
@@ -22,7 +22,7 @@ PUT /api/ratings/{id}       # Update a rating
 DELETE /api/ratings/{id}    # Delete a rating
 ```
 
-# Structure
+## Structure
 
 ```
 k6-quickpizza-nft-poc/
@@ -35,96 +35,97 @@ k6-quickpizza-nft-poc/
 ├─ utils/         # Utility functions for the load test scripts
 ```
 
-# Load tests
+## Load tests
 
-There are three files found in the ./load_tests/ direcotry, all using the same shared and reusable /api and /config functions:
+There are three files found in the [load_tests](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/load_tests) direcotry, all using the same shared and reusable /api and /config functions:
 
-- single-spike-scenario.js - Single scenario workload with sequential journey calls and no setup phase
-- multiple-spike-scenarios.js - Multiple individual scenarios run together. Contains a setup phase as well for shared user authentication.
-- multiple-spike-scenarios-with-data-creation.js - Same as the above but instead of a shared user authentication setup phase, it uses a CSV file created with a separate ./data_creation/data-creation.js script to load pre-created authentication tokens used in journeys that require the user to be authenticated.
+- [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js) - Single scenario workload with sequential journey calls and no setup phase
+- [multiple-spike-scenarios.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios.js) - Multiple individual scenarios run together. Contains a setup phase as well for shared user authentication.
+- [multiple-spike-scenarios-with-data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios-with-data-creation.js) - Same as the above but instead of a shared user authentication setup phase, it uses a CSV file created with a separate [data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/data_creation/data-creation.js) script to load pre-created authentication tokens used in journeys that require the user to be authenticated.
 
-# Test environments
+## Test environments
 
-- test - Runs a local single run functional smoke test to verify all journeys are working
-- dev - Runs a Spike test on a local deployment of the Quickpizza API found at http://localhost:3333
-- prod - Runs a Spike test against the live API at https://quickpizza.grafana.com/
+- `test` - Runs a local single run functional smoke test to verify all journeys are working
+- `dev` - Runs a Spike test on a local deployment of the Quickpizza API found at [localhost:3333](http://localhost:3333)
+- `prod` - Runs a Spike test against the live API at [quickpizza.grafana.com](https://quickpizza.grafana.com/)
 
-# Start/Stop Prometheus and grafana
+## Start/Stop Prometheus and grafana
 
-Courtesy of https://github.com/grafana/k6-oss-workshop
+Courtesy of Grafana [k6-oss-workshop](https://github.com/grafana/k6-oss-workshop)
 
-- http://localhost:3000/dashboards
-- http://localhost:9090/query
+- [localhost:3000/dashboards](http://localhost:3000/dashboards)
+- [localhost:9090/query](http://localhost:9090/query)
 
-```
+```bash
 docker compose up -d
 docker compose down
 ```
 
-# Run the main load test script
+## Run the main load test script
 
 Main test scripts are /load_tests/multiple-spike-scenarios.js for test and dev and /load_tests/single-spike-scenario.js for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
 
-\*Note, to run npm commands you will need to install node and npm which you can do with the node version manager https://github.com/nvm-sh/nvm , alternatively, the scripts can be run directly using the k6 command which will also need to be installed.
+***Note, to run npm commands you will need to install node and npm which you can do with the node version manager [nvm](https://github.com/nvm-sh/nvm) , alternatively, the scripts can be run directly using the k6 command which will also need to be installed.***
 
-```
+```bash
 npm test # points to the local API so you have to have started that one first
 npm run dev # also points to the local API
 npm run prod # points to the live API
 ```
 
-# Or select the load test to run
+## Or run without npm, using k6 directly
 
-```
+```bash
 K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=prod # test/dev/prod
-
+```
+```bash
 K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/single-spike-scenario.js -e ENVIRONMENT=prod # test/dev/prod
 ```
 
 ## Run data creation to create the data.csv file with a valid token and run the load test
 
-```
+```bash
 cd ./data_creation
 ./libs/k6 run ./data-creation.js -e ENVIRONMENT=prod
 cd ../
 K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=prod # test/dev/prod
 ```
 
-# Building a k6 version that can write to the filesystem for data creation
+## Building a k6 version that can write to the filesystem for data creation
 
-## Install golang and set up the PATH so it can run xk6
+### Install golang and set up the PATH so it can run xk6
 
-- https://developer.fedoraproject.org/tech/languages/go/go-installation.html
-- https://community.grafana.com/t/unable-to-locate-xk6-after-installing-it/99016
+- [go-installation.html](https://developer.fedoraproject.org/tech/languages/go/go-installation.html)
+- [unable-to-locate-xk6-after-installing-it](https://community.grafana.com/t/unable-to-locate-xk6-after-installing-it/99016)
 
-## Install xk6
+### Install xk6
 
-- https://grafana.com/docs/k6/latest/extensions/build-k6-binary-using-go/
+- [build-k6-binary-using-go](https://grafana.com/docs/k6/latest/extensions/build-k6-binary-using-go/)
 
-```
+```bash
 go install go.k6.io/xk6/cmd/xk6@latest
 ```
 
-## Build a k6 version that has the xk6-filewriter go module to write to file
+### Build a k6 version that has the xk6-filewriter go module to write to file
 
-- https://github.com/Dataport/xk6-filewriter
+- [xk6-filewriter](https://github.com/Dataport/xk6-filewriter)
 
-```
+```bash
 xk6 build --with github.com/Dataport/xk6-filewriter
 ```
 
-## Run data creation to create the data.csv file with a valid token
+### Run data creation to create the data.csv file with a valid token
 
-```
+```bash
 cd ./data_creation
 ./libs/k6 run ./data-creation.js -e ENVIRONMENT=dev
 ```
 
-# Quickpizza performance analysis
+## Quickpizza performance analysis
 
 First the purpose of a spike test: "A spike test verifies whether the system survives and performs under sudden and massive rushes of utilization."
 
-## Test setup
+### Test setup
 
 There are 7 calls, depending on the script run, they are all in the same scenario or in multiple. Each call has a sleep(1) at the end for more predictible RPS.
 
@@ -160,9 +161,9 @@ Add some extra graphs to the k6 Prometheus dashboard:
 
 Fresh start the local quickpizza setup using docker compose up/down before each test run to avoid issues.
 
-## Test runs
+### Test runs
 
-\*Note, report files for these runs, inlcuding prod can be found in /reports
+***Note, report files for these runs, inlcuding prod can be found in [/reports](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/reports)***
 
 Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
@@ -263,9 +264,9 @@ scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful
 ✓ http_req_failed................................: 0.04%  ✓ 12         ✗ 24088
 ```
 
-Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain api/ratings/{id} calls with Bad Request(400 Bad Request {"error":"operation not permitted for default user"}) and authentication issues even at low RPS for testing that, the default script is `single-spike-scenario.js`
+Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain `api/ratings/{id}` calls with Bad Request(`400 Bad Request {"error":"operation not permitted for default user"}`) and authentication issues even at low RPS for testing that, the default script is [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js)
 
-```
+```bash
 npm run prod
 ```
 
@@ -287,13 +288,9 @@ scenarios: (100.00%) 1 scenario, 35 max VUs, 2m0s max duration (incl. graceful s
    ✓ http_req_failed................................: 0.28%  ✓ 4         ✗ 1409
 ```
 
-# TODOS
+## TODOS
 
 - Secrets like the user password used to atuehnticate with the API can be saved using gitcrypt locally or in a k8s environment as secret files mounted in the test pods or even pulled from Vault.
 - The scenarios all run either a local smoke test in the test env or a simplistic spike test that does not control the rate of requests per second sent to the api very well. An improvement would be to use another scenario type like the constant or ramping arrival rate ones to better control RPS per endpoint under test. Also having a stress test coupled with a longer soak test would likely be the way to go.
 - The default quickpizza grafana dashboard does not show the per endpoint/transaction RPS rates in percentiles over time, so we could improve on this to get a better view of how the RPS changes per endpoint during the test run.
-- The data creation example uses CSV files but we could switch to JSON based files using https://msgpack.org/index.html for "efficient binary serialization"
-
-```
-
-```
+- The data creation example uses CSV files but we could switch to JSON based files using [msgpack](https://msgpack.org/index.html) for "efficient binary serialization"
