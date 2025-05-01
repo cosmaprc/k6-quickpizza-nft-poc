@@ -1,4 +1,4 @@
-import { check } from "k6";
+import { check, sleep } from "k6";
 import http from "k6/http";
 
 import { getRndInteger } from "../utils/utils.js";
@@ -23,7 +23,7 @@ export function makePizza(URL, params) {
     throw new Error(
       `Unable to get pizza ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
-  } else {
-    return res.json().pizza.id;
   }
+  sleep(1);
+  return res.json().pizza.id;
 }

@@ -37,7 +37,7 @@ export const createAndLoginUserScenarioSpikeWorkload = {
   executor: "ramping-vus",
   startVUs: 0,
   stages: [
-    { duration: "1m", target: 10 * 2 },
+    { duration: "1m", target: 35 * 2 },
     { duration: "1m", target: 0 },
   ],
   gracefulRampDown: "0s",
@@ -55,7 +55,7 @@ export const crudPizzaRatingScenarioSpikeWorkload = {
   executor: "ramping-vus",
   startVUs: 0,
   stages: [
-    { duration: "1m", target: 25 * 5 },
+    { duration: "1m", target: 35 * 5 },
     { duration: "1m", target: 0 },
   ],
   gracefulRampDown: "0s",
