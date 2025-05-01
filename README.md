@@ -2,7 +2,7 @@
 
 This is a POC of performance/non-functional testing a backend API using Grafana k6.
 
-Since [test-api.k6.io](https://test-api.k6.io) is now deprecated and redirects to https://quickpizza.grafana.com I've used the [Quickpizza API](https://github.com/grafana/quickpizza). This project has a [openapi.yaml](https://github.com/grafana/quickpizza/blob/main/quickpizza-openapi.yaml) file that can be loaded into [Swagger editor](https://editor.swagger.io/) to get a view of how it works and even test it directly from swagger, making it easy to write test scripts for it's endpoints.
+Since [test-api.k6.io](https://test-api.k6.io) is now deprecated and redirects to the [Quickpizza API](https://github.com/grafana/quickpizza), I've used that for this project. Quickpizza has an [openapi.yaml](https://github.com/grafana/quickpizza/blob/main/quickpizza-openapi.yaml) file that can be loaded into [Swagger editor](https://editor.swagger.io/) to get a view of how it works and even test it directly from swagger, making it easy to write test scripts for it's endpoints.
 
 The project is built using plain javascript, npm and node and uses eslint for linting, prettier for code formatting and lint-staged to run these on pre-commit, ensuring no unchecked code gets merged.
 
