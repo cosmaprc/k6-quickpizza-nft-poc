@@ -239,7 +239,7 @@ Better, though latency is still an issue. Let's increase it again.
 ✓ http_req_failed................................: 0.00%   ✓ 0          ✗ 20087
 ```
 
-6 - 441 max VUs targeting 441 RPS
+5 - 441 max VUs targeting 441 RPS
 
 ```
 scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful stop):
