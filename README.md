@@ -257,27 +257,24 @@ scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful
 ✓ http_req_failed................................: 0.04%  ✓ 12         ✗ 24088
 ```
 
-Now let's compare this with a live prod run:
+Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain api/ratings/{id} calls with Bad Request(400 Bad Request {"error":"operation not permitted for default user"}) and authentication issues even at low RPS for testing that, the default script is `single-spike-scenario.js`
 
-````
-    scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful stop):
-              * createAndLoginUserScenario: Up to 126 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: createAndLoginUserScenario, gracefulStop: 30s)
-              * crudPizzaRatingScenario: Up to 315 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, exec: crudPizzaRatingScenario, gracefulStop: 30s)
-              ```
+After several tests following a similar binary search approach as with the local API, the following seems to be the highest peak RPS run that does not breach the errors threhold, while the latency is horrendous anyway so ignoring it for now:
 
+```
+scenarios: (100.00%) 1 scenario, 35 max VUs, 2m0s max duration (incl. graceful stop):
+        * my_scenario: Up to 35 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, gracefulStop: 30s)
+```
 
-````
-
-     ✗ http_req_duration..............................: min=92.17ms avg=1.57s    med=546.54ms max=25.39s   p(90)=4.39s    p(95)=6.29s
-       { expected_response:true }...................: min=92.49ms avg=1.82s    med=647.1ms  max=25.39s   p(90)=5.2s     p(95)=7.5s
-     ✗ { url:/api/pizza,method:POST }...............: min=93.29ms avg=2.37s    med=1.87s    max=20.41s   p(90)=4.81s    p(95)=6.16s
-     ✗ { url:/api/ratings,method:POST }.............: min=92.96ms avg=976.6ms  med=299.85ms max=16.2s    p(90)=2.8s     p(95)=4.23s
-     ✗ { url:/api/ratings/{id} ,method:DELETE }.....: min=92.17ms avg=589.15ms med=200.77ms max=8.29s    p(90)=1.39s    p(95)=2.3s
-     ✗ { url:/api/ratings/{id},method:PUT }.........: min=92.72ms avg=549.98ms med=197.6ms  max=13.19s   p(90)=1.29s    p(95)=2.1s
-     ✗ { url:/api/users/token/login,method:POST }...: min=93.25ms avg=4.71s    med=3.89s    max=25.39s   p(90)=9.33s    p(95)=11.36s
-
-✗ http_req_failed................................: 50.36% ✓ 5050 ✗ 4976
-
+```
+   ✗ http_req_duration..............................: min=92.48ms  avg=485.77ms med=122.84ms max=6.29s    p(90)=1.14s    p(95)=1.6s
+       { expected_response:true }...................: min=92.48ms  avg=480.34ms med=121.37ms max=6.29s    p(90)=1.11s    p(95)=1.59s
+     ✗ { url:/api/pizza,method:POST }...............: min=101.28ms avg=492.93ms med=299.98ms max=4.39s    p(90)=954.22ms p(95)=1.44s
+     ✓ { url:/api/ratings,method:POST }.............: min=92.73ms  avg=126.87ms med=95.98ms  max=1.09s    p(90)=137.32ms p(95)=219.46ms
+     ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=92.48ms  avg=133.61ms med=95.17ms  max=1.09s    p(90)=167.93ms p(95)=360.93ms
+     ✓ { url:/api/ratings/{id},method:PUT }.........: min=92.67ms  avg=114.51ms med=95.57ms  max=999.99ms p(90)=107.56ms p(95)=233.09ms
+     ✗ { url:/api/users/token/login,method:POST }...: min=598.63ms avg=1.11s    med=802.1ms  max=6.29s    p(90)=1.89s    p(95)=2.44s
+   ✓ http_req_failed................................: 0.28%  ✓ 4         ✗ 1409
 ```
 
 # TODOS
@@ -286,4 +283,7 @@ Now let's compare this with a live prod run:
 - The scenarios all run either a local smoke test in the test env or a simplistic spike test that does not control the rate of requests per second sent to the api very well. An improvement would be to use another scenario type like the constant or ramping arrival rate ones to better control RPS per endpoint under test. Also having a stress test coupled with a longer soak test would likely be the way to go.
 - The default quickpizza grafana dashboard does not show the per endpoint/transaction RPS rates in percentiles over time, so we could improve on this to get a better view of how the RPS changes per endpoint during the test run.
 - The data creation example uses CSV files but we could switch to JSON based files using https://msgpack.org/index.html for "efficient binary serialization"
+
+```
+
 ```

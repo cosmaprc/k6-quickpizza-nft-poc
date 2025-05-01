@@ -20,7 +20,7 @@ export function makePizza(URL, params) {
     "Got pizza": (r) => r.status === 200,
   });
   if (!isSuccessful) {
-    console.log(
+    throw new Error(
       `Unable to get pizza ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   } else {

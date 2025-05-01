@@ -18,7 +18,7 @@ export function createRating(URL, pizzaId, params) {
   if (isSuccessful) {
     return res.json("id");
   } else {
-    console.log(
+    throw new Error(
       `Unable to create rating ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
@@ -34,7 +34,7 @@ export function fetchRatings(URL, params) {
     // "Fetched ratings is a list": (r) => r.json().ratings.length > 0,
   });
   if (!isSuccessful) {
-    console.log(
+    throw new Error(
       `Unable to fetch the ratings ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
@@ -51,7 +51,7 @@ export function updateRating(URL, ratingId, stars, params) {
     "Updated rating": (r) => r.status === 200,
   });
   if (!isSuccessful) {
-    console.log(
+    throw new Error(
       `Unable to update the rating ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
@@ -67,7 +67,7 @@ export function deleteRating(URL, ratingId, params) {
     "Deleted rating": (r) => r.status === 204,
   });
   if (!isSuccessful) {
-    console.log(
+    throw new Error(
       `Rating was not deleted ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }

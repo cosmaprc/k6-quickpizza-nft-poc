@@ -16,7 +16,7 @@ export function createUser(URL, username, password) {
     "Created user": (r) => r.status === 201,
   });
   if (!isSuccessfulCreate) {
-    console.log(
+    throw new Error(
       `Unable to create user ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
@@ -38,7 +38,7 @@ export function loginUser(URL, username, password) {
     "Logged in user": (r) => r.status === 200,
   });
   if (!isSuccessfulLogin) {
-    console.log(
+    throw new Error(
       `Unable to login user ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
