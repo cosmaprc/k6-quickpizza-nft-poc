@@ -165,7 +165,7 @@ Fresh start the local quickpizza setup using docker compose up/down before each 
 
 ### Test runs
 
-***Note, report files for these runs, inlcuding prod can be found in [/reports](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/reports)***
+***Note, report files for these runs, inlcuding prod can be found in [reports](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/reports)***
 
 Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
