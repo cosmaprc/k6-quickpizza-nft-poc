@@ -260,6 +260,10 @@ scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful
 
 Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain api/ratings/{id} calls with Bad Request(400 Bad Request {"error":"operation not permitted for default user"}) and authentication issues even at low RPS for testing that, the default script is `single-spike-scenario.js`
 
+```
+npm run prod
+```
+
 After several tests following a similar binary search approach as with the local API, the following seems to be the highest peak RPS run that does not breach the errors threhold, while the latency is horrendous anyway so ignoring it for now:
 
 ```
