@@ -65,6 +65,8 @@ docker compose down
 
 Main test scripts are /load_tests/multiple-spike-scenarios.js for test and dev and /load_tests/single-spike-scenario.js for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
 
+\*Note, to run npm commands you will need to install node and npm which you can do with the node version manager https://github.com/nvm-sh/nvm , alternatively, the scripts can be run directly using the k6 command which will also need to be installed.
+
 ```
 npm test # points to the local API so you have to have started that one first
 npm run dev # also points to the local API
