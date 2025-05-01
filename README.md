@@ -63,10 +63,12 @@ docker compose down
 
 # Run the main load test script
 
-Main test script is /load_tests/multiple-spike-scenarios.js , using prod env, an html-report generated and exposing 95th and 99th percentile metrics to Prometheus/Grafana
+Main test scripts are /load_tests/multiple-spike-scenarios.js for test and dev and /load_tests/single-spike-scenario.js for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
 
 ```
-npm test
+npm test # points to the local API so you have to have started that one first
+npm run dev # also points to the local API
+npm run prod # points to the live API
 ```
 
 # Select the load test to run
