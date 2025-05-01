@@ -76,19 +76,18 @@ npm run prod # points to the live API
 # Or select the load test to run
 
 ```
-export "K6_PROMETHEUS_RW_TREND_STATS=p(90),p(95),min,max"
+K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=prod # test/dev/prod
 
-k6 run --out=experimental-prometheus-rw ./load_tests/multiple-spike-scenarios.js -e ENVIRONMENT=dev # test/dev/prod
-k6 run --out=experimental-prometheus-rw ./load_tests/single-spike-scenario.js -e ENVIRONMENT=dev
+K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/single-spike-scenario.js -e ENVIRONMENT=prod # test/dev/prod
 ```
 
 ## Run data creation to create the data.csv file with a valid token and run the load test
 
 ```
 cd ./data_creation
-./libs/k6 run ./data-creation.js -e ENVIRONMENT=dev
+./libs/k6 run ./data-creation.js -e ENVIRONMENT=prod
 cd ../
-k6 run --out=experimental-prometheus-rw ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=dev
+K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=prod # test/dev/prod
 ```
 
 # Building a k6 version that can write to the filesystem for data creation
