@@ -55,7 +55,10 @@ Courtesy of Grafana [k6-oss-workshop](https://github.com/grafana/k6-oss-workshop
 - [localhost:9090/query](http://localhost:9090/query)
 
 ```bash
+# Start docker, grafana and a local quickpizza app
 docker compose up -d
+
+# Stop
 docker compose down
 ```
 
@@ -84,9 +87,9 @@ K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_
 
 ```bash
 cd ./data_creation
-./libs/k6 run ./data-creation.js -e ENVIRONMENT=prod
+../libs/k6 run ./data-creation.js -e ENVIRONMENT=dev
 cd ../
-K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=prod # test/dev/prod
+K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_TREND_STATS=p\(90\),p\(95\),min,max k6 run --out=experimental-prometheus-rw --summary-trend-stats min,avg,med,max,p\(90\),p\(95\) ./load_tests/multiple-spike-scenarios-with-data-creation.js -e ENVIRONMENT=dev # test/dev
 ```
 
 ## (Optional) Building a k6 version that can write to the filesystem for data creation
@@ -118,7 +121,7 @@ xk6 build --with github.com/Dataport/xk6-filewriter
 
 ```bash
 cd ./data_creation
-./libs/k6 run ./data-creation.js -e ENVIRONMENT=dev
+../libs/k6 run ./data-creation.js -e ENVIRONMENT=dev
 ```
 
 ## Quickpizza performance analysis
@@ -167,7 +170,13 @@ Fresh start the local quickpizza setup using docker compose up/down before each 
 
 Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
+```bash
+# Start docker, grafana and a local quickpizza app
+docker compose up -d
 ```
+
+```bash
+# Run the test
 npm run dev
 ```
 
@@ -264,7 +273,7 @@ scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful
 ✓ http_req_failed................................: 0.04%  ✓ 12         ✗ 24088
 ```
 
-Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain `api/ratings/{id}` calls with Bad Request(`400 Bad Request {"error":"operation not permitted for default user"}`) and authentication issues even at low RPS for testing that, the default script is [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js)
+Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain `api/ratings/{id}` calls with Bad Request(`400 Bad Request {"error":"operation not permitted for default user"}`) and authentication issues even at low RPS, likely due to cookies being needed in the live prod env compared to the local testing env, so for testing prod, the default script is [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js)
 
 ```bash
 npm run prod
@@ -273,20 +282,31 @@ npm run prod
 After several tests following a similar binary search approach as with the local API, the following seems to be the highest peak RPS run that does not breach the errors threhold, while the latency is horrendous anyway so ignoring it for now:
 
 ```
-scenarios: (100.00%) 1 scenario, 35 max VUs, 2m0s max duration (incl. graceful stop):
-        * my_scenario: Up to 35 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, gracefulStop: 30s)
+scenarios: (100.00%) 1 scenario, 210 max VUs, 2m0s max duration (incl. graceful stop):
+        * my_scenario: Up to 210 looping VUs for 2m0s over 2 stages (gracefulRampDown: 0s, gracefulStop: 30s)
 ```
 
 ```
-   ✗ http_req_duration..............................: min=92.48ms  avg=485.77ms med=122.84ms max=6.29s    p(90)=1.14s    p(95)=1.6s
-       { expected_response:true }...................: min=92.48ms  avg=480.34ms med=121.37ms max=6.29s    p(90)=1.11s    p(95)=1.59s
-     ✗ { url:/api/pizza,method:POST }...............: min=101.28ms avg=492.93ms med=299.98ms max=4.39s    p(90)=954.22ms p(95)=1.44s
-     ✓ { url:/api/ratings,method:POST }.............: min=92.73ms  avg=126.87ms med=95.98ms  max=1.09s    p(90)=137.32ms p(95)=219.46ms
-     ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=92.48ms  avg=133.61ms med=95.17ms  max=1.09s    p(90)=167.93ms p(95)=360.93ms
-     ✓ { url:/api/ratings/{id},method:PUT }.........: min=92.67ms  avg=114.51ms med=95.57ms  max=999.99ms p(90)=107.56ms p(95)=233.09ms
-     ✗ { url:/api/users/token/login,method:POST }...: min=598.63ms avg=1.11s    med=802.1ms  max=6.29s    p(90)=1.89s    p(95)=2.44s
-   ✓ http_req_failed................................: 0.28%  ✓ 4         ✗ 1409
+█ Pizza operations
+
+  ✗ Got pizza
+  ↳  97% — ✓ 1479 / ✗ 37
+
+✗ http_req_duration..............................: min=92.68ms avg=228.78ms med=103.7ms  max=4.89s    p(90)=419.35ms p(95)=677.43ms
+    { expected_response:true }...................: min=92.68ms avg=220.66ms med=103.44ms max=3.9s     p(90)=409.16ms p(95)=661.19ms
+  ✗ { url:/api/pizza,method:POST }...............: min=98.42ms avg=404.3ms  med=208.82ms max=4.89s    p(90)=736.11ms p(95)=899.33ms
+  ✓ { url:/api/ratings,method:POST }.............: min=93.03ms avg=108.01ms med=96.04ms  max=998.89ms p(90)=110.76ms p(95)=169.95ms
+  ✓ { url:/api/ratings/{id} ,method:DELETE }.....: min=92.68ms avg=102.58ms med=94.98ms  max=1.09s    p(90)=100.27ms p(95)=109.33ms
+  ✓ { url:/api/ratings/{id},method:PUT }.........: min=93.08ms avg=103.28ms med=95.4ms   max=1.4s     p(90)=100.39ms p(95)=123.09ms
+  ✗ { url:/api/users/token/login,method:POST }...: min=158.8ms avg=367.77ms med=217.47ms max=3.9s     p(90)=590.3ms  p(95)=1.1s    
+✓ http_req_failed................................: 0.35%  ✓ 37        ✗ 10276
 ```
+
+Reports for this prod run can be found at [result-30vus.html](./reports/prod/result-30vus.html) and [html-report-30vus.html](./reports/prod/html-report-30vus.html) and for grafana, you can find screenshots below:
+
+![prod-single-30vus-1.png](./screenshots/prod-single-30vus-1.png)
+![prod-single-30vus-2.png](./screenshots/prod-single-30vus-2.png)
+![prod-single-30vus-3.png](./screenshots/prod-single-30vus-3.png)
 
 ## TODOS
 

@@ -28,7 +28,7 @@ export function handleSummary(data) {
 }
 
 export default function () {
-  const USERNAME = `${randomString(12)}@example.com`;
+  const USERNAME = `${randomString(8)}hb1@example.com`;
   const PASSWORD = "secret";
 
   const requestConfig = () => ({
