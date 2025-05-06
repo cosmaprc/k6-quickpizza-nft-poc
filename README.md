@@ -35,11 +35,11 @@ k6-quickpizza-nft-poc/
 
 ## Load tests
 
-There are three files found in the [load_tests](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/load_tests) direcotry, all using the same shared and reusable /api and /config functions:
+There are three files found in the [load_tests](./load_tests) direcotry, all using the same shared and reusable /api and /config functions:
 
-- [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js) - Single scenario workload with sequential journey calls and no setup phase
-- [multiple-spike-scenarios.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios.js) - Multiple individual scenarios run together. Contains a setup phase as well for shared user authentication.
-- [multiple-spike-scenarios-with-data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios-with-data-creation.js) - Same as the above but instead of a shared user authentication setup phase, it uses a CSV file created with a separate [data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/data_creation/data-creation.js) script to load pre-created authentication tokens used in journeys that require the user to be authenticated.
+- [single-spike-scenario.js](./load_tests/single-spike-scenario.js) - Single scenario workload with sequential journey calls and no setup phase
+- [multiple-spike-scenarios.js](./load_tests/multiple-spike-scenarios.js) - Multiple individual scenarios run together. Contains a setup phase as well for shared user authentication.
+- [multiple-spike-scenarios-with-data-creation.js](./load_tests/multiple-spike-scenarios-with-data-creation.js) - Same as the above but instead of a shared user authentication setup phase, it uses a CSV file created with a separate [data-creation.js](./data_creation/data-creation.js) script to load pre-created authentication tokens used in journeys that require the user to be authenticated.
 
 ## Test environments
 
@@ -64,7 +64,7 @@ docker compose down
 
 ## Run the main load test script
 
-Main test scripts are [multiple-spike-scenarios.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios.js) for test and dev and [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js) for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
+Main test scripts are [multiple-spike-scenarios.js](./load_tests/multiple-spike-scenarios.js) for test and dev and [single-spike-scenario.js](./load_tests/single-spike-scenario.js) for prod env due to an issue with the multiple spike scenario script that seems to get worse when hitting the live API as opposed to the local one. The run will generate an html-report.html and a result.html file, besides the text summary as well as send metrics to Prometheus/Grafana.
 
 ***Note, to run npm commands you will need to install node and npm which you can do with the node version manager [nvm](https://github.com/nvm-sh/nvm) , alternatively, the scripts can be run directly using the k6 command which will also need to be installed.***
 
@@ -94,7 +94,7 @@ K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html K6_PROMETHEUS_RW_
 
 ## (Optional) Building a k6 version that can write to the filesystem for data creation
 
-***This is optional and only if you want to run the [multiple-spike-scenarios-with-data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/multiple-spike-scenarios-with-data-creation.js) script which needs the [data-creation.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/data_creation/data-creation.js) script to be run first, which in turn needs a k6 version that can write to the filesystem***
+***This is optional and only if you want to run the [multiple-spike-scenarios-with-data-creation.js](./load_tests/multiple-spike-scenarios-with-data-creation.js) script which needs the [data-creation.js](./data_creation/data-creation.js) script to be run first, which in turn needs a k6 version that can write to the filesystem***
 
 ### Install golang and set up the PATH so it can run xk6
 
@@ -166,7 +166,7 @@ Fresh start the local quickpizza setup using docker compose up/down before each 
 
 ### Test runs
 
-***Note, report files for these runs, inlcuding prod can be found in [reports](https://github.com/cosmaprc/k6-quickpizza-nft-poc/tree/main/reports)***
+***Note, report files for these runs, inlcuding prod can be found in [reports](./reports)***
 
 Let's use the local quickpizza deployment firs, instead of the live/prod api so we have more control and use it as a baseline for comparison.
 
@@ -273,7 +273,7 @@ scenarios: (100.00%) 2 scenarios, 441 max VUs, 2m0s max duration (incl. graceful
 ✓ http_req_failed................................: 0.04%  ✓ 12         ✗ 24088
 ```
 
-Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain `api/ratings/{id}` calls with Bad Request(`400 Bad Request {"error":"operation not permitted for default user"}`) and authentication issues even at low RPS, likely due to cookies being needed in the live prod env compared to the local testing env, so for testing prod, the default script is [single-spike-scenario.js](https://github.com/cosmaprc/k6-quickpizza-nft-poc/blob/main/load_tests/single-spike-scenario.js)
+Now let's compare this with a live prod run, but note that there likely is an issue with the code in the multiple-spike-scenarios.js script as it fails certain `api/ratings/{id}` calls with Bad Request(`400 Bad Request {"error":"operation not permitted for default user"}`) and authentication issues even at low RPS, likely due to cookies being needed in the live prod env compared to the local testing env, so for testing prod, the default script is [single-spike-scenario.js](./load_tests/single-spike-scenario.js)
 
 ```bash
 npm run prod
