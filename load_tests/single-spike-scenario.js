@@ -13,9 +13,12 @@ import {
 import { createUser, loginUser } from "../api/users.js";
 import { BASE_URL, THRESHOLDS, WORKLOAD } from "../config/config.js";
 
+const HTTP_CALLS_PER_TEST = 7;
+const TARGET_RPS = 74;
+
 export const options = {
   scenarios: {
-    my_scenario: WORKLOAD,
+    my_scenario: WORKLOAD(TARGET_RPS, HTTP_CALLS_PER_TEST),
   },
   thresholds: THRESHOLDS,
 };
