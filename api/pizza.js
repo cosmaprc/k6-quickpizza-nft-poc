@@ -24,6 +24,5 @@ export function makePizza(URL, params) {
       `Unable to get pizza ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
-  sleep(1);
   return res.json().pizza.id;
 }

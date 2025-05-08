@@ -3,10 +3,6 @@ import {
   nftThresholdsSettings,
 } from "./thresholds.js";
 import {
-  createAndLoginUserScenarioSpikeWorkload,
-  createAndLoginUserScenarioTestWorkload,
-  crudPizzaRatingScenarioSpikeWorkload,
-  crudPizzaRatingScenarioTestWorkload,
   spikeWorkload,
   testWorkload,
 } from "./workloads.js";
@@ -33,12 +29,12 @@ export const BASE_URL = Config.BASE_URL;
 export const WORKLOAD = ENV_CONFIG !== "test" ? spikeWorkload : testWorkload;
 export const CRUD_PIZZA_RATING_WORKLOAD =
   ENV_CONFIG !== "test"
-    ? crudPizzaRatingScenarioSpikeWorkload
-    : crudPizzaRatingScenarioTestWorkload;
+    ? spikeWorkload
+    : testWorkload;
 export const CREATE_AND_LOGIN_USER_WORKLOAD =
   ENV_CONFIG !== "test"
-    ? createAndLoginUserScenarioSpikeWorkload
-    : createAndLoginUserScenarioTestWorkload;
+    ? spikeWorkload
+    : testWorkload;
 
 export const THRESHOLDS =
   ENV_CONFIG !== "test" ? nftThresholdsSettings : functionalThresholdsSettings;

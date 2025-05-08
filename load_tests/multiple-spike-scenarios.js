@@ -19,10 +19,13 @@ import {
   THRESHOLDS,
 } from "../config/config.js";
 
+const HTTP_CALLS_PER_TEST = 7;
+const TARGET_RPS = 74; // 74 max in live prod and 400 on local machine
+
 export const options = {
   scenarios: {
-    createAndLoginUserScenario: CREATE_AND_LOGIN_USER_WORKLOAD,
-    crudPizzaRatingScenario: CRUD_PIZZA_RATING_WORKLOAD,
+    createAndLoginUserScenario: CREATE_AND_LOGIN_USER_WORKLOAD(TARGET_RPS, HTTP_CALLS_PER_TEST, "createAndLoginUserScenario"),
+    crudPizzaRatingScenario: CRUD_PIZZA_RATING_WORKLOAD(TARGET_RPS, HTTP_CALLS_PER_TEST, "crudPizzaRatingScenario"),
   },
   thresholds: THRESHOLDS,
 };
@@ -35,7 +38,7 @@ export function handleSummary(data) {
 }
 
 export function setup() {
-  let username = `${randomString(10)}1@example.com`;
+  let username = `${randomString(8)}hb2@example.com`;
   let password = "secret";
   let authToken = null; // This will be set after the user is created and logged in
   group("Users setup operations", () => {
@@ -56,7 +59,7 @@ export function setup() {
 }
 
 export function createAndLoginUserScenario() {
-  let username = `${randomString(10)}2@example.com`;
+  let username = `${randomString(8)}hb3@example.com`;
   let password = "secret";
   group("Users operations", () => {
     createUser(`${BASE_URL}/api/users`, username, password);
