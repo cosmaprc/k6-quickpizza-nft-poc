@@ -20,7 +20,6 @@ export function createUser(URL, username, password) {
       `Unable to create user ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
-  sleep(1);
 }
 
 export function loginUser(URL, username, password) {
@@ -44,6 +43,5 @@ export function loginUser(URL, username, password) {
     );
   }
   authToken = res.json("token");
-  sleep(1);
   return authToken;
 }

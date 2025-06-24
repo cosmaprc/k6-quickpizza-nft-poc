@@ -16,7 +16,6 @@ export function createRating(URL, pizzaId, params) {
     "Created rating": (r) => r.status === 201,
   });
   if (isSuccessful) {
-    sleep(1);
     return res.json("id");
   } else {
     throw new Error(
@@ -38,7 +37,6 @@ export function fetchRatings(URL, params) {
       `Unable to fetch the ratings ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
-  sleep(1);
 }
 
 export function updateRating(URL, ratingId, stars, params) {
@@ -56,7 +54,6 @@ export function updateRating(URL, ratingId, stars, params) {
       `Unable to update the rating ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
-  sleep(1);
 }
 
 export function deleteRating(URL, ratingId, params) {
@@ -73,5 +70,4 @@ export function deleteRating(URL, ratingId, params) {
       `Rating was not deleted ${URL} ${res.status} ${res.status_text} ${res.body}`,
     );
   }
-  sleep(1);
 }

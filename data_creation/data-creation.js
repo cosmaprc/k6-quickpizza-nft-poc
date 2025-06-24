@@ -23,7 +23,6 @@ export function setup() {
   );
 
   check(res, { "created user": (r) => r.status === 201 });
-  sleep(1);
 
   const loginRes = http.post(
     `${BASE_URL}/api/users/token/login`,
@@ -35,7 +34,6 @@ export function setup() {
 
   const authToken = loginRes.json("token");
   check(authToken, { "logged in successfully": () => authToken.length > 0 });
-  sleep(1);
 
   return authToken;
 }

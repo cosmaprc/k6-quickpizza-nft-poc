@@ -1,62 +1,32 @@
-export const spikeWorkload = {
-  executor: "ramping-vus",
-  startVUs: 0,
-  stages: [
-    { duration: "1m", target: 30 * 7 },
-    { duration: "1m", target: 0 },
-  ],
-  gracefulRampDown: "0s",
+
+export function spikeWorkload(targetRps, totalHttpCallsPerTest, exec = null) {
+  let target = Math.ceil(targetRps / totalHttpCallsPerTest)
+  let workload =  {
+    executor: 'ramping-arrival-rate',
+    startRate: 0,
+    timeUnit: '1s',
+    preAllocatedVUs: 1,
+    // vus are set to a lot more than the target rps, just to be sure we have enough, but a better way to tell how many are needed would be good
+    maxVUs: target * 10,
+    stages: [
+      { target: target, duration: '1m' },
+      { target: 0, duration: '1m' },
+    ],
+  };
+  if (exec != null) {
+    workload.exec = exec
+  };
+  return workload
 };
 
-export const stressWorkload = {
-  executor: "ramping-vus",
-  startVUs: 0,
-  stages: [
-    { duration: "1m", target: 10 * 7 },
-    { duration: "2m", target: 10 * 7 },
-    { duration: "1m", target: 0 },
-  ],
-  gracefulRampDown: "0s",
-};
-
-export const testWorkload = {
-  executor: "shared-iterations",
-  iterations: 1,
-  vus: 1,
-};
-
-export const createAndLoginUserScenarioTestWorkload = {
-  executor: "shared-iterations",
-  exec: "createAndLoginUserScenario",
-  iterations: 1,
-  vus: 1,
-};
-
-export const createAndLoginUserScenarioSpikeWorkload = {
-  exec: "createAndLoginUserScenario",
-  executor: "ramping-vus",
-  startVUs: 0,
-  stages: [
-    { duration: "1m", target: 30 * 2 },
-    { duration: "1m", target: 0 },
-  ],
-  gracefulRampDown: "0s",
-};
-
-export const crudPizzaRatingScenarioTestWorkload = {
-  exec: "crudPizzaRatingScenario",
-  executor: "shared-iterations",
-  iterations: 1,
-  vus: 1,
-};
-
-export const crudPizzaRatingScenarioSpikeWorkload = {
-  exec: "crudPizzaRatingScenario",
-  executor: "ramping-vus",
-  startVUs: 0,
-  stages: [
-    { duration: "1m", target: 30 * 5 },
-    { duration: "1m", target: 0 },
-  ],
-  gracefulRampDown: "0s",
+export function testWorkload(targetRps = null, totalHttpCallsPerTest = null, exec = null) {
+  let workload = {
+    executor: "shared-iterations",
+    iterations: 1,
+    vus: 1,
+  };
+  if (exec != null) {
+    workload.exec = exec
+  };
+  return workload
 };
